@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: traefik:v2.4
+    command: --api.insecure=true --providers.docker
+    restart: always
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'local'
+    volumes:
+      - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    labels:
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.localhost`)"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    driver: bridge
