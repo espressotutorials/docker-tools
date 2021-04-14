@@ -20,6 +20,7 @@ services:
       MYSQL_ROOT_PASSWORD: 'local'
     volumes:
       - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+      - ./phpmyadmin/ca-certificate.crt:/etc/phpmyadmin/ca-certificate.crt
     labels:
       - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.localhost`)"
     networks:
@@ -27,4 +28,5 @@ services:
 
 networks:
   traefik:
+    name: docker-tools_traefik
     driver: bridge
